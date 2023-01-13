@@ -62,4 +62,23 @@ class MovieRepositoryTest {
         assertEquals(2, allMovies.size());
     }
 
+    @Test
+    @DisplayName("Confirming Movie details")
+    void getMovieById() {
+        //Arrange
+        Movie avatar = new Movie();
+        avatar.setName("Avatar");
+        avatar.setGenre("Action");
+        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        //Act
+        movieRepository.save(avatar);
+        Movie avatarMovie = movieRepository.findById(avatar.getId()).get();
+
+        //Assert
+        assertNotNull(avatarMovie);
+        assertEquals("Action", avatarMovie.getGenre());
+        assertThat(avatarMovie.getReleaseDate()).isBefore(LocalDate.of(2000, Month.APRIL, 23));
+    }
+
 }
