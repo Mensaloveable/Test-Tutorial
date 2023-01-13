@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -99,6 +100,33 @@ class MovieRepositoryTest {
         //Assert
         assertEquals("Fantasy", newMovie.getGenre());
         assertEquals("Avatar", newMovie.getName());
+    }
+
+    @Test
+    @DisplayName("This should delete a movie")
+    void deleteMovie() {
+        //Arrange
+        Movie avatar = new Movie();
+        avatar.setName("Avatar");
+        avatar.setGenre("Action");
+        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+        movieRepository.save(avatar);
+        Long id = avatar.getId();
+
+        Movie titanic = new Movie();
+        avatar.setName("Titanic");
+        avatar.setGenre("Romance");
+        avatar.setReleaseDate(LocalDate.of(1999, Month.MAY, 22));
+        movieRepository.save(titanic);
+
+        //Act
+        movieRepository.delete(avatar);
+        Optional<Movie> findMovie = movieRepository.findById(id);
+        List<Movie> allMovies = movieRepository.findAll();
+
+        //Assert
+        assertEquals(1, allMovies.size());
+        assertThat(findMovie).isEmpty();
     }
 
 }
