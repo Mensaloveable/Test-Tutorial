@@ -74,7 +74,7 @@ class MovieRepositoryTest {
 
         //Act
         movieRepository.save(avatar);
-        Movie avatarMovie = movieRepository.findById(avatar.getId()).get();
+        Movie avatarMovie = movieRepository.findById(avatar.getId()).orElse(null);
 
         //Assert
         assertNotNull(avatarMovie);
@@ -91,9 +91,10 @@ class MovieRepositoryTest {
         avatar.setGenre("Action");
         avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
         movieRepository.save(avatar);
-        Movie avatarMovie = movieRepository.findById(avatar.getId()).get();
+        Movie avatarMovie = movieRepository.findById(avatar.getId()).orElse(null);
 
         //Act
+        assert avatarMovie != null;
         avatarMovie.setGenre("Fantasy");
         Movie newMovie = movieRepository.save(avatarMovie);
 
