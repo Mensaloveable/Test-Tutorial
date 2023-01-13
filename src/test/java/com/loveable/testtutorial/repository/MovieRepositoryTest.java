@@ -81,4 +81,24 @@ class MovieRepositoryTest {
         assertThat(avatarMovie.getReleaseDate()).isBefore(LocalDate.of(2000, Month.APRIL, 23));
     }
 
+    @Test
+    @DisplayName("Movie Genre should be updated to \"Fantasy\"")
+    void updateMovie(){
+        //Arrange
+        Movie avatar = new Movie();
+        avatar.setName("Avatar");
+        avatar.setGenre("Action");
+        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+        movieRepository.save(avatar);
+        Movie avatarMovie = movieRepository.findById(avatar.getId()).get();
+
+        //Act
+        avatarMovie.setGenre("Fantasy");
+        Movie newMovie = movieRepository.save(avatarMovie);
+
+        //Assert
+        assertEquals("Fantasy", newMovie.getGenre());
+        assertEquals("Avatar", newMovie.getName());
+    }
+
 }
