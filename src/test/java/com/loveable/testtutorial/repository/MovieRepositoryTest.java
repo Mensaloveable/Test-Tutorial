@@ -1,6 +1,7 @@
 package com.loveable.testtutorial.repository;
 
 import com.loveable.testtutorial.model.Movie;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,26 @@ class MovieRepositoryTest {
     @Autowired
     private MovieRepository movieRepository;
 
+    private Movie avatar;
+    private Movie titanic;
+
+    @BeforeEach
+    void init() {
+        avatar = new Movie();
+        avatar.setName("Avatar");
+        avatar.setGenre("Action");
+        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        titanic = new Movie();
+        titanic.setName("Titanic");
+        titanic.setGenre("Romance");
+        titanic.setReleaseDate(LocalDate.of(1999, Month.MAY, 22));
+    }
+
     @Test
     @DisplayName("It should save the movie to the Database")
     void save() {
         //Arrange
-        Movie avatar = new Movie();
-        avatar.setName("Avatar");
-        avatar.setGenre("Action");
-        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
 
         //Act
         Movie newMovie = movieRepository.save(avatar);
@@ -42,15 +55,6 @@ class MovieRepositoryTest {
     @DisplayName("It should return he movie list with size of 2")
     void getAllSize() {
         //Arrange
-        Movie avatar = new Movie();
-        avatar.setName("Avatar");
-        avatar.setGenre("Action");
-        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
-
-        Movie titanic = new Movie();
-        avatar.setName("Titanic");
-        avatar.setGenre("Romance");
-        avatar.setReleaseDate(LocalDate.of(1999, Month.MAY, 22));
 
         //Act
         movieRepository.save(avatar);
@@ -67,10 +71,6 @@ class MovieRepositoryTest {
     @DisplayName("Confirming Movie details")
     void getMovieById() {
         //Arrange
-        Movie avatar = new Movie();
-        avatar.setName("Avatar");
-        avatar.setGenre("Action");
-        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
 
         //Act
         movieRepository.save(avatar);
@@ -86,10 +86,6 @@ class MovieRepositoryTest {
     @DisplayName("Movie Genre should be updated to \"Fantasy\"")
     void updateMovie() {
         //Arrange
-        Movie avatar = new Movie();
-        avatar.setName("Avatar");
-        avatar.setGenre("Action");
-        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
         movieRepository.save(avatar);
         Movie avatarMovie = movieRepository.findById(avatar.getId()).orElse(null);
 
@@ -107,17 +103,9 @@ class MovieRepositoryTest {
     @DisplayName("This should delete a movie")
     void deleteMovie() {
         //Arrange
-        Movie avatar = new Movie();
-        avatar.setName("Avatar");
-        avatar.setGenre("Action");
-        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
         movieRepository.save(avatar);
         Long id = avatar.getId();
 
-        Movie titanic = new Movie();
-        avatar.setName("Titanic");
-        avatar.setGenre("Romance");
-        avatar.setReleaseDate(LocalDate.of(1999, Month.MAY, 22));
         movieRepository.save(titanic);
 
         //Act
@@ -134,16 +122,8 @@ class MovieRepositoryTest {
     @DisplayName("Should return movie list with genre \"Romance\"")
     void getMoviesByGenre() {
         //Arrange
-        Movie avatar = new Movie();
-        avatar.setName("Avatar");
-        avatar.setGenre("Action");
-        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
         movieRepository.save(avatar);
 
-        Movie titanic = new Movie();
-        avatar.setName("Titanic");
-        avatar.setGenre("Romance");
-        avatar.setReleaseDate(LocalDate.of(1999, Month.MAY, 22));
         movieRepository.save(titanic);
 
         //Act
