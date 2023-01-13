@@ -84,7 +84,7 @@ class MovieRepositoryTest {
 
     @Test
     @DisplayName("Movie Genre should be updated to \"Fantasy\"")
-    void updateMovie(){
+    void updateMovie() {
         //Arrange
         Movie avatar = new Movie();
         avatar.setName("Avatar");
@@ -128,6 +128,30 @@ class MovieRepositoryTest {
         //Assert
         assertEquals(1, allMovies.size());
         assertThat(findMovie).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Should return movie list with genre \"Romance\"")
+    void getMoviesByGenre() {
+        //Arrange
+        Movie avatar = new Movie();
+        avatar.setName("Avatar");
+        avatar.setGenre("Action");
+        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+        movieRepository.save(avatar);
+
+        Movie titanic = new Movie();
+        avatar.setName("Titanic");
+        avatar.setGenre("Romance");
+        avatar.setReleaseDate(LocalDate.of(1999, Month.MAY, 22));
+        movieRepository.save(titanic);
+
+        //Act
+        List<Movie> romanceMovies = movieRepository.findByGenre("Romance");
+
+        //Assert
+        assertNotNull(romanceMovies);
+        assertThat(romanceMovies.size()).isEqualTo(1);
     }
 
 }
