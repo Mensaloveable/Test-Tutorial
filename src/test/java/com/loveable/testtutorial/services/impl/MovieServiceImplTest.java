@@ -10,8 +10,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -43,6 +46,28 @@ class MovieServiceImplTest {
 
     @Test
     void getAllMovies() {
+        Movie avatar = new Movie();
+        avatar.setId(1L);
+        avatar.setName("Avatar");
+        avatar.setGenre("Action");
+        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        Movie titanic = new Movie();
+        titanic.setId(2L);
+        titanic.setName("Titanic");
+        titanic.setGenre("Romance");
+        titanic.setReleaseDate(LocalDate.of(1999, Month.MAY, 22));
+
+        List<Movie> movieList = new ArrayList<>();
+        movieList.add(avatar);
+        movieList.add(titanic);
+
+        when(movieRepository.findAll()).thenReturn(movieList);
+
+        List<Movie> movies = movieService.getAllMovies();
+
+        assertNotNull(movies);
+        assertEquals(2, movies.size());
     }
 
     @Test
