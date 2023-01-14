@@ -2,6 +2,7 @@ package com.loveable.testtutorial.services.impl;
 
 import com.loveable.testtutorial.model.Movie;
 import com.loveable.testtutorial.repository.MovieRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
@@ -31,6 +31,7 @@ class MovieServiceImplTest {
     private MovieServiceImpl movieService;
 
     @Test
+    @DisplayName("Should save Avatar")
     void save() {
         Movie avatar = new Movie();
         avatar.setId(1L);
@@ -47,6 +48,7 @@ class MovieServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should return 2 as number of movies")
     void getAllMovies() {
         Movie avatar = new Movie();
         avatar.setId(1L);
@@ -73,6 +75,7 @@ class MovieServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should return avatar with id 1L")
     void getMovieById() {
         Movie avatar = new Movie();
         avatar.setId(1L);
@@ -86,6 +89,20 @@ class MovieServiceImplTest {
 
         assertNotNull(movieById);
         assertThat(movieById.getId()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("Should throw exception")
+    void getMovieByIdForException() {
+        Movie avatar = new Movie();
+        avatar.setId(1L);
+        avatar.setName("Avatar");
+        avatar.setGenre("Action");
+        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        when(movieRepository.findById(1L)).thenReturn(Optional.of(avatar));
+
+        assertThrows(RuntimeException.class, () -> movieService.getMovieById(2L));
     }
 
     @Test
