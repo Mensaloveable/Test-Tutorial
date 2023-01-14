@@ -12,11 +12,13 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -72,6 +74,18 @@ class MovieServiceImplTest {
 
     @Test
     void getMovieById() {
+        Movie avatar = new Movie();
+        avatar.setId(1L);
+        avatar.setName("Avatar");
+        avatar.setGenre("Action");
+        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        when(movieRepository.findById(anyLong())).thenReturn(Optional.of(avatar));
+
+        Movie movieById = movieService.getMovieById(1L);
+
+        assertNotNull(movieById);
+        assertThat(movieById.getId()).isEqualTo(1L);
     }
 
     @Test
