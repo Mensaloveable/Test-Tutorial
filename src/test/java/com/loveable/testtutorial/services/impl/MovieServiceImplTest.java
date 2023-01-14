@@ -106,7 +106,22 @@ class MovieServiceImplTest {
     }
 
     @Test
+    @DisplayName("should update movie in database")
     void updateMovie() {
+        Movie avatar = new Movie();
+        avatar.setId(1L);
+        avatar.setName("Avatar");
+        avatar.setGenre("Action");
+        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        when(movieRepository.findById(anyLong())).thenReturn(Optional.of(avatar));
+        when(movieRepository.save(any(Movie.class))).thenReturn(avatar);
+        avatar.setGenre("Fantasy");
+
+        Movie updatedMovie = movieService.updateMovie(avatar, 1L);
+
+        assertNotNull(updatedMovie);
+        assertEquals("Fantasy", updatedMovie.getGenre());
     }
 
     @Test
