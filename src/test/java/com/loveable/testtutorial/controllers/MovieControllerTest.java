@@ -3,6 +3,7 @@ package com.loveable.testtutorial.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loveable.testtutorial.model.Movie;
 import com.loveable.testtutorial.services.MovieService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -34,14 +35,26 @@ class MovieControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Test
-    void shouldCreateMovie() throws Exception {
-        Movie avatar = new Movie();
+    private Movie avatar;
+    private Movie titanic;
+
+    @BeforeEach
+    void init() {
+        avatar = new Movie();
         avatar.setId(1L);
         avatar.setName("Avatar");
         avatar.setGenre("Action");
         avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
 
+        titanic = new Movie();
+        titanic.setId(2L);
+        titanic.setName("Titanic");
+        titanic.setGenre("Romance");
+        titanic.setReleaseDate(LocalDate.of(1999, Month.MAY, 22));
+    }
+
+    @Test
+    void shouldCreateMovie() throws Exception {
         when(movieService.save(any(Movie.class))).thenReturn(avatar);
 
         mockMvc.perform(post("/movies")
@@ -55,18 +68,6 @@ class MovieControllerTest {
 
     @Test
     void shouldFetchAllMovies() throws Exception {
-        Movie avatar = new Movie();
-        avatar.setId(1L);
-        avatar.setName("Avatar");
-        avatar.setGenre("Action");
-        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
-
-        Movie titanic = new Movie();
-        titanic.setId(2L);
-        titanic.setName("Titanic");
-        titanic.setGenre("Romance");
-        titanic.setReleaseDate(LocalDate.of(1999, Month.MAY, 22));
-
         List<Movie> movieList = new ArrayList<>();
         movieList.add(avatar);
         movieList.add(titanic);
@@ -97,15 +98,9 @@ class MovieControllerTest {
 
     @Test
     void shouldUpdateMovie() throws Exception {
-        Movie avatar = new Movie();
-        avatar.setId(1L);
-        avatar.setName("Avatar");
-        avatar.setGenre("Action");
-        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
-
         when(movieService.updateMovie(any(Movie.class), anyLong())).thenReturn(avatar);
 
-        mockMvc.perform(put("/movies/{id}", 1l)
+        mockMvc.perform(put("/movies/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(avatar)))
                 .andExpect(status().isOk())
