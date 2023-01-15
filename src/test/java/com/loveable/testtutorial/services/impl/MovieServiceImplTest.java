@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 
@@ -125,6 +125,19 @@ class MovieServiceImplTest {
     }
 
     @Test
+    @DisplayName("Should delete Avatar from database")
     void deleteMovie() {
+        Movie avatar = new Movie();
+        avatar.setId(1L);
+        avatar.setName("Avatar");
+        avatar.setGenre("Action");
+        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        when(movieRepository.findById(anyLong())).thenReturn(Optional.of(avatar));
+        doNothing().when(movieRepository).delete(any(Movie.class));
+
+        movieService.deleteMovie(1L);
+
+        verify(movieRepository, times(1)).delete(avatar);
     }
 }
