@@ -12,10 +12,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -48,15 +51,31 @@ class MovieControllerTest {
                 .andExpect(jsonPath("$.name", is(avatar.getName())))
                 .andExpect(jsonPath("$.genre", is(avatar.getGenre())))
                 .andExpect(jsonPath("$.releaseDate", is(avatar.getReleaseDate().toString())));
-
-
     }
-    //.andExpect((ResultMatcher) contentType(MediaType.APPLICATION_JSON))
-    //                .andExpect(content(objectMapper.writeValueAsString(avatar)))
-
 
     @Test
-    void getAllMovies() {
+    void shouldFetchAllMovies() throws Exception {
+        Movie avatar = new Movie();
+        avatar.setId(1L);
+        avatar.setName("Avatar");
+        avatar.setGenre("Action");
+        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        Movie titanic = new Movie();
+        titanic.setId(2L);
+        titanic.setName("Titanic");
+        titanic.setGenre("Romance");
+        titanic.setReleaseDate(LocalDate.of(1999, Month.MAY, 22));
+
+        List<Movie> movieList = new ArrayList<>();
+        movieList.add(avatar);
+        movieList.add(titanic);
+
+        when(movieService.getAllMovies()).thenReturn(movieList);
+
+        mockMvc.perform(get("/movies"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(movieList.size())));
     }
 
     @Test
