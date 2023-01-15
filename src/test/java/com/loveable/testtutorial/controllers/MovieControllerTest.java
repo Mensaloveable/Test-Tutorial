@@ -96,12 +96,22 @@ class MovieControllerTest {
     }
 
     @Test
-    void shouldUpdateMovie() {
+    void shouldUpdateMovie() throws Exception {
         Movie avatar = new Movie();
         avatar.setId(1L);
         avatar.setName("Avatar");
         avatar.setGenre("Action");
         avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
+
+        when(movieService.updateMovie(any(Movie.class), anyLong())).thenReturn(avatar);
+
+        mockMvc.perform(put("/movies/{id}", 1l)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(avatar)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(avatar.getName())))
+                .andExpect(jsonPath("$.genre", is(avatar.getGenre())))
+                .andExpect(jsonPath("$.releaseDate", is(avatar.getReleaseDate().toString())));
     }
 
     @Test
