@@ -17,7 +17,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 @ToString
-//@RequiredArgsConstructor
+@Builder
 public class Movie {
     @Id
     @GeneratedValue(strategy = IDENTITY)
