@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -59,7 +60,25 @@ class MovieIntegrationTest {
     }
 
     @Test
-    void getAllMovies() {
+    void shouldFetchAllMovies() {
+        avatar = Movie.builder()
+                .name("Avatar")
+                .genre("Action")
+                .releaseDate(LocalDate.of(2000, Month.APRIL, 22))
+                .build();
+        titanic = Movie.builder()
+                .name("Titanic")
+                .genre("Romance")
+                .releaseDate(LocalDate.of(1999, Month.MAY, 22))
+                .build();
+
+        restTemplate.postForObject(baseUrl, avatar, Movie.class);
+        restTemplate.postForObject(baseUrl, titanic, Movie.class);
+
+        List movieList = restTemplate.getForObject(baseUrl, List.class);
+
+        assertNotNull(movieList);
+        assertThat(movieList.size()).isEqualTo(2);
     }
 
     @Test
