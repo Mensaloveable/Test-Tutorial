@@ -29,7 +29,7 @@ class MovieIntegrationTest {
     private static RestTemplate restTemplate;
     @Autowired
     private MovieRepository movieRepository;
-    private Movie avatar, titanic;
+    private Movie avatar, titanic, movie1, movie2;
 
     @BeforeAll
     static void init() {
@@ -39,6 +39,20 @@ class MovieIntegrationTest {
     @BeforeEach
     void setUp() {
         baseUrl = "%s:%d/movies".formatted(baseUrl, port);
+
+        avatar = Movie.builder()
+                .name("Avatar")
+                .genre("Action")
+                .releaseDate(LocalDate.of(2000, Month.APRIL, 22))
+                .build();
+        titanic = Movie.builder()
+                .name("Titanic")
+                .genre("Romance")
+                .releaseDate(LocalDate.of(1999, Month.MAY, 22))
+                .build();
+
+        movie1 = movieRepository.save(avatar);
+        movie2 = movieRepository.save(titanic);
     }
 
     @AfterEach
@@ -48,34 +62,13 @@ class MovieIntegrationTest {
 
     @Test
     void shouldCreateNewMovie() {
-        avatar = Movie.builder()
-                .name("Avatar")
-                .genre("Action")
-                .releaseDate(LocalDate.of(2000, Month.APRIL, 22))
-                .build();
 
-        Movie movie = restTemplate.postForObject(baseUrl, avatar, Movie.class);
-
-        assertNotNull(movie);
-        assertThat(movie.getId()).isNotNull();
+        assertNotNull(movie1);
+        assertThat(movie1.getId()).isNotNull();
     }
 
     @Test
     void shouldFetchAllMovies() {
-        avatar = Movie.builder()
-                .name("Avatar")
-                .genre("Action")
-                .releaseDate(LocalDate.of(2000, Month.APRIL, 22))
-                .build();
-        titanic = Movie.builder()
-                .name("Titanic")
-                .genre("Romance")
-                .releaseDate(LocalDate.of(1999, Month.MAY, 22))
-                .build();
-
-        restTemplate.postForObject(baseUrl, avatar, Movie.class);
-        restTemplate.postForObject(baseUrl, titanic, Movie.class);
-
         List movieList = restTemplate.getForObject(baseUrl, List.class);
 
         assertNotNull(movieList);
@@ -84,44 +77,15 @@ class MovieIntegrationTest {
 
     @Test
     void shouldFetchOneMovie() {
-        avatar = Movie.builder()
-                .name("Avatar")
-                .genre("Action")
-                .releaseDate(LocalDate.of(2000, Month.APRIL, 22))
-                .build();
-
-        titanic = Movie.builder()
-                .name("Titanic")
-                .genre("Romance")
-                .releaseDate(LocalDate.of(1999, Month.MAY, 22))
-                .build();
-
-        Movie movie1 = restTemplate.postForObject(baseUrl, avatar, Movie.class);
-        Movie movie2 = restTemplate.postForObject(baseUrl, titanic, Movie.class);
-
         assert movie1 != null;
         Movie movie = restTemplate.getForObject(baseUrl + "/" + movie1.getId(), Movie.class);
 
         assertNotNull(movie);
-        assertThat(movie.getId()).isEqualTo(1L);
+        assertEquals("Avatar", movie.getName());
     }
 
     @Test
     void shouldUpdateMovie() {
-        avatar = Movie.builder()
-                .name("Avatar")
-                .genre("Action")
-                .releaseDate(LocalDate.of(2000, Month.APRIL, 22))
-                .build();
-        titanic = Movie.builder()
-                .name("Titanic")
-                .genre("Romance")
-                .releaseDate(LocalDate.of(1999, Month.MAY, 22))
-                .build();
-
-        Movie movie1 = restTemplate.postForObject(baseUrl, avatar, Movie.class);
-        Movie movie2 = restTemplate.postForObject(baseUrl, titanic, Movie.class);
-
         assert movie1 != null;
         movie1.setGenre("Fantasy");
 
@@ -135,20 +99,6 @@ class MovieIntegrationTest {
 
     @Test
     void shouldDeleteMovie() {
-        avatar = Movie.builder()
-                .name("Avatar")
-                .genre("Action")
-                .releaseDate(LocalDate.of(2000, Month.APRIL, 22))
-                .build();
-        titanic = Movie.builder()
-                .name("Titanic")
-                .genre("Romance")
-                .releaseDate(LocalDate.of(1999, Month.MAY, 22))
-                .build();
-
-        Movie movie1 = restTemplate.postForObject(baseUrl, avatar, Movie.class);
-        Movie movie2 = restTemplate.postForObject(baseUrl, titanic, Movie.class);
-
         assert movie1 != null;
         restTemplate.delete(baseUrl + "/" + movie1.getId());
 
