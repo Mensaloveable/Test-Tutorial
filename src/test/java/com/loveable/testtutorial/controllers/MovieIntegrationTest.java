@@ -16,6 +16,7 @@ import java.time.Month;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
@@ -106,10 +107,30 @@ class MovieIntegrationTest {
     }
 
     @Test
-    void updateMovie() {
+    void shouldUdateMovie() {
     }
 
     @Test
-    void deleteMovie() {
+    void shouldDeleteMovie() {
+        avatar = Movie.builder()
+                .name("Avatar")
+                .genre("Action")
+                .releaseDate(LocalDate.of(2000, Month.APRIL, 22))
+                .build();
+        titanic = Movie.builder()
+                .name("Titanic")
+                .genre("Romance")
+                .releaseDate(LocalDate.of(1999, Month.MAY, 22))
+                .build();
+
+        Movie movie1 = restTemplate.postForObject(baseUrl, avatar, Movie.class);
+        Movie movie2 = restTemplate.postForObject(baseUrl, titanic, Movie.class);
+
+        assert movie1 != null;
+        restTemplate.delete(baseUrl+"/"+movie1.getId());
+
+        int size = movieRepository.findAll().size();
+
+        assertEquals(1, size);
     }
 }
