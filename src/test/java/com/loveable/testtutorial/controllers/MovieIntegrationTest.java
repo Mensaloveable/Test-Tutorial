@@ -107,7 +107,30 @@ class MovieIntegrationTest {
     }
 
     @Test
-    void shouldUdateMovie() {
+    void shouldUpdateMovie() {
+        avatar = Movie.builder()
+                .name("Avatar")
+                .genre("Action")
+                .releaseDate(LocalDate.of(2000, Month.APRIL, 22))
+                .build();
+        titanic = Movie.builder()
+                .name("Titanic")
+                .genre("Romance")
+                .releaseDate(LocalDate.of(1999, Month.MAY, 22))
+                .build();
+
+        Movie movie1 = restTemplate.postForObject(baseUrl, avatar, Movie.class);
+        Movie movie2 = restTemplate.postForObject(baseUrl, titanic, Movie.class);
+
+        assert movie1 != null;
+        movie1.setGenre("Fantasy");
+
+        restTemplate.put(baseUrl+"/{id}", movie1, movie1.getId());
+
+        Movie updatedMovie = restTemplate.getForObject(baseUrl + "/" + movie1.getId(), Movie.class);
+
+        assertNotNull(updatedMovie);
+        assertThat(updatedMovie.getGenre()).isEqualTo("Fantasy");
     }
 
     @Test
