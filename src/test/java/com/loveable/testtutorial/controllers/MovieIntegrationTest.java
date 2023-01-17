@@ -98,6 +98,7 @@ class MovieIntegrationTest {
         Movie movie1 = restTemplate.postForObject(baseUrl, avatar, Movie.class);
         Movie movie2 = restTemplate.postForObject(baseUrl, titanic, Movie.class);
 
+        assert movie1 != null;
         Movie movie = restTemplate.getForObject(baseUrl+"/"+movie1.getId(), Movie.class);
 
         assertNotNull(movie);
