@@ -82,7 +82,26 @@ class MovieIntegrationTest {
     }
 
     @Test
-    void getMovie() {
+    void shouldFetchOneMovie() {
+        avatar = Movie.builder()
+                .name("Avatar")
+                .genre("Action")
+                .releaseDate(LocalDate.of(2000, Month.APRIL, 22))
+                .build();
+
+        titanic = Movie.builder()
+                .name("Titanic")
+                .genre("Romance")
+                .releaseDate(LocalDate.of(1999, Month.MAY, 22))
+                .build();
+
+        Movie movie1 = restTemplate.postForObject(baseUrl, avatar, Movie.class);
+        Movie movie2 = restTemplate.postForObject(baseUrl, titanic, Movie.class);
+
+        Movie movie = restTemplate.getForObject(baseUrl+"/"+movie1.getId(), Movie.class);
+
+        assertNotNull(movie);
+        assertThat(movie.getId()).isEqualTo(1L);
     }
 
     @Test
