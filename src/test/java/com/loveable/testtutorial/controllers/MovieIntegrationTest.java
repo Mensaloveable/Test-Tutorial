@@ -32,7 +32,7 @@ class MovieIntegrationTest {
     private Movie avatar, titanic;
 
     @BeforeAll
-    static void init(){
+    static void init() {
         restTemplate = new RestTemplate();
     }
 
@@ -100,7 +100,7 @@ class MovieIntegrationTest {
         Movie movie2 = restTemplate.postForObject(baseUrl, titanic, Movie.class);
 
         assert movie1 != null;
-        Movie movie = restTemplate.getForObject(baseUrl+"/"+movie1.getId(), Movie.class);
+        Movie movie = restTemplate.getForObject(baseUrl + "/" + movie1.getId(), Movie.class);
 
         assertNotNull(movie);
         assertThat(movie.getId()).isEqualTo(1L);
@@ -125,7 +125,7 @@ class MovieIntegrationTest {
         assert movie1 != null;
         movie1.setGenre("Fantasy");
 
-        restTemplate.put(baseUrl+"/{id}", movie1, movie1.getId());
+        restTemplate.put(baseUrl + "/{id}", movie1, movie1.getId());
 
         Movie updatedMovie = restTemplate.getForObject(baseUrl + "/" + movie1.getId(), Movie.class);
 
@@ -150,7 +150,7 @@ class MovieIntegrationTest {
         Movie movie2 = restTemplate.postForObject(baseUrl, titanic, Movie.class);
 
         assert movie1 != null;
-        restTemplate.delete(baseUrl+"/"+movie1.getId());
+        restTemplate.delete(baseUrl + "/" + movie1.getId());
 
         int size = movieRepository.findAll().size();
 
