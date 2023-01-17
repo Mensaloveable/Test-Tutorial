@@ -81,12 +81,6 @@ class MovieControllerTest {
 
     @Test
     void shouldGetMovieById() throws Exception {
-        Movie avatar = new Movie();
-        avatar.setId(1L);
-        avatar.setName("Avatar");
-        avatar.setGenre("Action");
-        avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
-
         when(movieService.getMovieById(anyLong())).thenReturn(avatar);
 
         mockMvc.perform(get("/movies/{id}", 1)) //"/movies/1" is also valid
