@@ -46,7 +46,6 @@ class MovieControllerTest {
         avatar.setGenre("Action");
         avatar.setReleaseDate(LocalDate.of(2000, Month.APRIL, 22));
 
-
         titanic = new Movie();
         titanic.setId(2L);
         titanic.setName("Titanic");
