@@ -57,7 +57,11 @@ class MovieControllerTest {
     void shouldCreateMovie() throws Exception {
         when(movieService.save(any(Movie.class))).thenReturn(avatar);
 
-        mockMvc.perform(post("/movies").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(avatar))).andExpect(status().isCreated()).andExpect(jsonPath("$.name", is(avatar.getName()))).andExpect(jsonPath("$.genre", is(avatar.getGenre()))).andExpect(jsonPath("$.releaseDate", is(avatar.getReleaseDate().toString())));
+        mockMvc.perform(post("/movies")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(avatar)))
+                .andExpect(status().isCreated()).andExpect(jsonPath("$.name", is(avatar.getName())))
+                .andExpect(jsonPath("$.genre", is(avatar.getGenre()))).andExpect(jsonPath("$.releaseDate", is(avatar.getReleaseDate().toString())));
     }
 
     @Test
@@ -68,7 +72,9 @@ class MovieControllerTest {
 
         when(movieService.getAllMovies()).thenReturn(movieList);
 
-        mockMvc.perform(get("/movies")).andExpect(status().isOk()).andExpect(jsonPath("$.size()", is(movieList.size())));
+        mockMvc.perform(get("/movies"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(movieList.size())));
     }
 
     @Test
@@ -76,14 +82,20 @@ class MovieControllerTest {
         when(movieService.getMovieById(anyLong())).thenReturn(avatar);
 
         mockMvc.perform(get("/movies/{id}", 1)) //"/movies/1" is also valid
-                .andExpect(status().isOk()).andExpect(jsonPath("$.name", is(avatar.getName()))).andExpect(jsonPath("$.genre", is(avatar.getGenre()))).andExpect(jsonPath("$.releaseDate", is(avatar.getReleaseDate().toString())));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(avatar.getName())))
+                .andExpect(jsonPath("$.genre", is(avatar.getGenre())))
+                .andExpect(jsonPath("$.releaseDate", is(avatar.getReleaseDate().toString())));
     }
 
     @Test
     void shouldUpdateMovie() throws Exception {
         when(movieService.updateMovie(any(Movie.class), anyLong())).thenReturn(avatar);
 
-        mockMvc.perform(put("/movies/{id}", 1L).contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(avatar))).andExpect(status().isOk()).andExpect(jsonPath("$.name", is(avatar.getName()))).andExpect(jsonPath("$.genre", is(avatar.getGenre()))).andExpect(jsonPath("$.releaseDate", is(avatar.getReleaseDate().toString())));
+        mockMvc.perform(put("/movies/{id}", 1L)
+                .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(avatar)))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.name", is(avatar.getName())))
+                .andExpect(jsonPath("$.genre", is(avatar.getGenre()))).andExpect(jsonPath("$.releaseDate", is(avatar.getReleaseDate().toString())));
     }
 
     @Test
