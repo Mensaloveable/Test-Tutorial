@@ -94,8 +94,10 @@ class MovieControllerTest {
 
         mockMvc.perform(put("/movies/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(avatar)))
-                .andExpect(status().isOk()).andExpect(jsonPath("$.name", is(avatar.getName())))
-                .andExpect(jsonPath("$.genre", is(avatar.getGenre()))).andExpect(jsonPath("$.releaseDate", is(avatar.getReleaseDate().toString())));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is(avatar.getName())))
+                .andExpect(jsonPath("$.genre", is(avatar.getGenre())))
+                .andExpect(jsonPath("$.releaseDate", is(avatar.getReleaseDate().toString())));
     }
 
     @Test
